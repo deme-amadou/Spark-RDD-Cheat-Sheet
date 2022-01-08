@@ -21,3 +21,34 @@ can be a local computer file system, HDFS, Cassandra, Amazon S3, and so on.
 ```
 val fileRDD = spark.sparkContext.textFile("/tmp/data.txt")
 ```
+-The third way to create an RDD is by invoking one of the transformation operations
+on an existing RDD.
+
+### Transformations
+
+#### map(func)
+The most fundamental, versatile, and commonly used transformation is the map operation. It is used to transform some aspect of the data per row to something else.
+
+- Using a Map Transformation to Convert All Characters in the String to Uppercase
+```
+val allCapsRDD = stringRDD.map(line => line.toUpperCase)
+allCapsRDD.collect().foreach(println)
+```
+- Defining a Function and Using It in the Map Transformation
+```
+def toUpperCase(line:String) : String = {  line.toUpperCase }
+stringRDD.map(l => toUpperCase(l)).collect.foreach(println)
+```
+- Using a map Transformation to Convert Text Data into Scala Contact
+Objects
+```
+case class Contact(id:Long, name:String, email:String)
+val contactData = Array("1#John Doe#jdoe@domain.com","2#Mary
+Jane#mjane@domain.com")
+val contactDataRDD = spark.sparkContext.parallelize(contactData)
+val contactRDD = contactDataRDD.map(l => {
+         val contactArray = l.split("#")
+         Contact(contactArray(0).toLong, contactArray(1), contactArray(2))
+})
+contactRDD.collect.foreach(println)
+```
