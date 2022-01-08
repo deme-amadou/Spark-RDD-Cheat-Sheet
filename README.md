@@ -8,8 +8,7 @@ The RDD operations are classified into two types: Transformations and Actions. T
 
 ### Creating RDDs
 
-- The first way to create an RDD is to parallelize an object collection, meaning
-converting it to a distributed dataset that can be operated in parallel.
+- The first way to create an RDD is to parallelize an object collection, meaning converting it to a distributed dataset that can be operated in parallel.
 The way to parallelize an object collection is to call the parallelize method of the
 SparkContext class.
 ```
@@ -50,16 +49,13 @@ val contactRDD = contactDataRDD.map(l => {
 contactRDD.collect.foreach(println)
 ```
 ### flatMap(func)
-The second most commonly used transformation is flatMap. Let’s say you want to
-transform the stringRDD from a collection of strings to a collection of words. The
-flatMap transformation is perfect for this use case
+The second most commonly used transformation is flatMap. Let’s say you want to transform the stringRDD from a collection of strings to a collection of words. The flatMap transformation is perfect for this use case.
 - Using the flatMap Transformation to Transform Lines into Words
 ```
 val wordRDD = stringRDD.flatMap(line => line.split(" "))
 wordRDD.collect().foreach(println)
 ```
-It is extremely important to have a clear understanding of the behavior differences
-between the map and flatMap transformations.
+It is extremely important to have a clear understanding of the behavior differences between the map and flatMap transformations.
 - The Behavior of map vs. flatMap
 ```
 stringRDD.map(line => line.split(" ")).collect
@@ -72,9 +68,10 @@ stringRDD.flatMap(line => line.split(" ")).collect
 ### filter(func)
 Another commonly used transformation is the filter transformation. It does what its name sounds like, which is to filter a dataset down to the rows that meet the conditions defined inside the given func.
 - Filtering for Lines That Contain the Word Awesome
+```
 val awesomeLineRDD = stringRDD.filter(line => line.contains("awesome"))
 awesomeLineRDD.collect
-
+```
 ### mapPartitions(func)/mapPartitionsWithIndex(index, func)
 To complete
 - Performing a Setup Before Performing a Transformation on Each Row
@@ -121,13 +118,7 @@ val realWords = words.substract(stopWords)
 realWords.collect()
 ```
 ### distinct( )
-The distinct transformation represents another flavor of transformation where it
-doesn’t take any function or another RDD as an input parameter. Instead, it is a directive
-to the source RDD to remove any duplicate rows. The question is, how does it determine
-whether two rows are the same? A common approach is to transpose the content of each
-row into a numeric value by computing the hash code of the content. That is exactly what
-Spark does. To remove duplicate rows in an RDD, it simply computes the hash code of
-each row and compares them to determine whether two rows are identical.
+The distinct transformation represents another flavor of transformation where it doesn’t take any function or another RDD as an input parameter. Instead, it is a directive to the source RDD to remove any duplicate rows. The question is, how does it determine whether two rows are the same? A common approach is to transpose the content of each row into a numeric value by computing the hash code of the content. That is exactly what Spark does. To remove duplicate rows in an RDD, it simply computes the hash code of each row and compares them to determine whether two rows are identical.
 
 - Removing Duplicates Using the distinct Transformation
 ```
