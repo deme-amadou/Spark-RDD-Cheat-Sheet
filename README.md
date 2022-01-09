@@ -250,6 +250,98 @@ levels. The first level is at each individual partition, and the second level is
 
 ![Reduce By Key](ReduceByKey.png)
 
+- Using the reduceByKey Transformation to Tally the Price
+```
+val candyTx = sc.parallelize(List(("candy1", 5.2), ("candy2", 3.5),
+                                                   ("candy1", 2.0),
+						     ("candy2", 6.0),
+						     ("candy3", 3.0))
+val summaryTx = candyTx.reduceByKey((total, value) => total + value)
+summaryTx.collect()
+```
+#### sortByKey([ascending],[numTasks])
+This transformation is simple to understand. It sorts the rows according the key, and there is an option to specify whether the result should be in ascending (default) or descending order.
+- Using the sortByKey Transformation to Sort by Price
+```
+val summaryByPrice = summaryTx.map(t => (t._2, t._1)).sortByKey()
+summaryByPrice.collect
+```
+- Using the sortByKey transformation Based on Price in Descending
+Order
+```
+val summaryByPrice = summaryTx.map(t => (t._2, t._1)).sortByKey(false)
+summaryByPrice.collect
+```
+#### join(otherRDD)
+Performing any meaningful data analysis usually involves joining two or more datasets.
+The join transformation is used to combine the information of two datasets to enable
+rich data analysis or to extract insights. For example, if one dataset contains the
+transaction information and it has a member ID and details of the transaction and
+another dataset contains the member information, by joining these two datasets you can
+answer questions such as, what is the breakdown of the transactions by the age group,
+and which age group made the largest number of transactions?
+By joining the dataset of type (K,V) and dataset (K,W), the result of the joined
+dataset is (K,(V,W)). There are several variations of joining two datasets, like left and
+right outer joins.
+- Join of Member Transaction Dataset and Member Group Dataset
+```
+val memberTx = sc.parallelize(List((110, 50.35), (127, 305.2), (126, 211.0),
+                                    (105, 6.0),(165, 31.0), (110, 40.11)))
+val memberInfo = sc.parallelize(List((110, "a"), (127, "b"), (126, "b"),
+(105, "a"),(165, "c")))
+val memberTxInfo = memberTx.join(memberInfo)
+memberTxInfo.collect().foreach(println)
+```
+### Key/Value Pair RDD Actions
+Pair RDD has a small set of actions. These actions will bring the result back to the driver side, so be careful about the amount of data that will be brought back.
+
+#### countByKey( )
+For a given pair RDD, this action ignores the value of each row and reports only the number of values with the same key for each key to the driver.
+- Using countByKey to count the number of elements for each key
+```
+val candyTx = sc.parallelize(List(("candy1", 5.2), ("candy2", 3.5),
+("candy1", 2.0), ("candy3", 6.0)))
+candyTx.countByKey()
+-> scala.collection.Map[String,Long] = Map(candy1 -> 2, candy2 -> 1, candy3 -> 1)
+```
+#### collectAsMap( )
+Similar to the collect action, this one brings the entire dataset to the driver side as a
+map, where each entry represents a row.
+- Using the collectAsMap Action
+```
+val candyTx = sc.parallelize(List(("candy1", 5.2), ("candy2", 3.5),
+("candy1", 2.0), ("candy3", 6.0)))
+candyTx.collectAsMap()
+-> scala.collection.Map[String,Double] = Map(candy2 -> 3.5, candy1 -> 2.0, candy3 -> 6.0)
+```
+Notice if the dataset contains multiple rows with the same key, it will be collapsed
+into a single entry in the map.
+#### lookup(key)
+This action can be used as a quick way to verify whether a particular key exists in the
+RDD.
+- Using the lookup Action
+```
+val candyTx = sc.parallelize(List(("candy1", 5.2), ("candy2", 3.5),
+("candy1", 2.0), ("candy3", 6.0)))
+candyTx.lookup("candy1")
+candyTx.lookup("candy2")
+candyTx.lookup("candy5")
+-> Seq[Double] = WrappedArray(5.2, 2.0)
+   Seq[Double] = WrappedArray(3.5)
+   Seq[Double] = WrappedArray()
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
