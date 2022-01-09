@@ -267,7 +267,7 @@ pairRDD.collect().foreach(println)
    (7,amazing)
    (5,piece)
    (2,of)
-(   10,technology)
+   (10,technology)
 ```
 ### Key/Value Pair RDD Transformations
 In addition to the transformations a key/value pair RDD has additional transformations that are designed to operate on keys.
