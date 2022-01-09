@@ -30,6 +30,8 @@ The most fundamental, versatile, and commonly used transformation is the map ope
 ```
 val allCapsRDD = stringRDD.map(line => line.toUpperCase)
 allCapsRDD.collect().foreach(println)
+-> SPARK IS COOL
+   SPARK IS AWESOME
 ```
 - Defining a Function and Using It in the Map Transformation
 ```
